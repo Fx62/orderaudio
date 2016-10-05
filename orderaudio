@@ -1,0 +1,18 @@
+#!/bin/bash 
+
+SEARCH=/storage/recordings/RECORDINGS/MP3/
+SAVE=/storage/recordings/RECORDINGS/MP3
+SAVEIFS=$IFS
+FORMAT="mp3"
+IFS=$(echo -en "\n\b")
+for mate in $(find ${SEARCH} -maxdepth 1 -type f -name "*.${FORMAT}")
+do  
+    DIRECT=$(echo ${mate} |grep -o -P '(\d{12})' |head -n 1 |cut -c 1-6 |sed -e "s/\(..\)\(..\)\(..\)/\1\/\2\/\3/")
+    if [[ -d ${SAVE}/${DIRECT} ]]; then
+        /usr/bin/mv ${mate} ${SAVE}/20${DIRECT}
+    else
+	/usr/bin/mkdir -p ${SAVE}/20${DIRECT}
+        /usr/bin/mv ${mate} ${SAVE}/20${DIRECT}
+    fi
+done
+IFS=$SAVEIFS
